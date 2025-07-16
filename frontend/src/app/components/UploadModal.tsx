@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { X, Brain, FileText, Tag, Layers, Check, AlertCircle } from 'lucide-react';
-import { ModelMeta } from '../lib/client';
+
 
 interface ModelPreview {
   model_info: {

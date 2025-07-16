@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
-import { Upload, FileText, X, Check } from 'lucide-react';
+import { Upload, FileText, X } from 'lucide-react';
 import { apiClient, ModelMeta } from '../lib/client';
 import analytics from '../lib/client-analytics';
 import UploadModal from './UploadModal';

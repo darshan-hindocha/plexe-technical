@@ -1,3 +1,18 @@
+/**
+ * Main application page for Plexe ML Model Service.
+ * 
+ * Provides tabbed interface for:
+ * - Chat: Real-time conversation with AI assistant
+ * - Upload: Model file upload with validation
+ * - Models: Model management and overview
+ * 
+ * Production TODOs:
+ * - Add user authentication
+ * - Implement proper error boundaries
+ * - Add loading states and skeletons
+ * - Set up analytics tracking
+ * - Add accessibility improvements
+ */
 'use client';
 
 import React, { useState, useEffect } from 'react';

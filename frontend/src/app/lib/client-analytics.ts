@@ -169,7 +169,7 @@ const initializePostHog = async (): Promise<any> => {
       script.src = 'https://eu-assets.i.posthog.com/static/array.js';
       script.async = true;
       
-      await new Promise((resolve, reject) => {
+      await new Promise((resolve) => {
         script.onload = () => {
           console.log('✅ PostHog: Script loaded successfully');
           resolve(true);

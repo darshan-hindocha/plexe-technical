@@ -1,8 +1,15 @@
 """
 Chat Agent service for provider-agnostic ML model management.
 
-This follows the same pattern as plexe's ConversationalAgent, using
-decorated tool functions directly with the ToolCallingAgent.
+Provides conversational AI interface using smolagents + litellm for multi-provider support.
+Implements tool calling pattern with decorated functions for ML operations.
+
+Production TODOs:
+- Add conversation memory/context persistence
+- Implement user session management
+- Add rate limiting per user/session
+- Set up monitoring and analytics
+- Add conversation logging for debugging
 """
 
 import logging
@@ -45,14 +52,7 @@ class ChatAgent:
         # Create the agent with all decorated tools and YAML prompt templates
         self.agent = ToolCallingAgent(
             name="MLModelAssistant",
-            description=(
-                "Expert ML assistant that helps users manage machine learning models, "
-                "make predictions, and navigate the ML workflow. Provides guidance on "
-                "model deployment, feature requirements, and prediction interpretation. "
-                "Can list models, get model information, make predictions, validate features, "
-                "check system status, and provide guidance on file uploads. Always provides helpful, "
-                "clear responses and guides users through complex ML operations."
-            ),
+            description="ML assistant for model management, predictions, and workflow guidance.",
             model=LiteLLMModel(model_id=self.model_id, api_key=api_key),
             tools=ALL_TOOLS,  # Pass decorated functions directly
             add_base_tools=False,
@@ -83,8 +83,8 @@ class ChatAgent:
             response = await loop.run_in_executor(None, self.agent.run, message)
             return str(response)
         except Exception as e:
-            logger.error(f"Chat processing failed: {str(e)}")
-            return f"I encountered an error processing your request: {str(e)}. Please try again or ask for help."
+            logger.error(f"Chat processing failed: {e}")
+            return f"Error: {e}"
 
 
 def get_chat_agent(verbose: bool = False) -> ChatAgent:
@@ -102,19 +102,6 @@ def get_chat_agent(verbose: bool = False) -> ChatAgent:
         return ChatAgent(model_id=settings.default_ai_provider, verbose=verbose)
     except Exception as e:
         if settings.fallback_ai_provider:
-            logger.warning(
-                f"Primary provider {settings.default_ai_provider} failed: {e}. "
-                f"Falling back to {settings.fallback_ai_provider}"
-            )
-            try:
-                return ChatAgent(
-                    model_id=settings.fallback_ai_provider, verbose=verbose
-                )
-            except Exception as fallback_error:
-                logger.error(f"Fallback provider also failed: {fallback_error}")
-                raise Exception(
-                    f"Both primary and fallback providers failed. Primary: {e}, Fallback: {fallback_error}"
-                )
-        else:
-            logger.error(f"Primary provider failed and no fallback configured: {e}")
-            raise
+            logger.warning(f"Primary provider failed, using fallback: {e}")
+            return ChatAgent(model_id=settings.fallback_ai_provider, verbose=verbose)
+        raise

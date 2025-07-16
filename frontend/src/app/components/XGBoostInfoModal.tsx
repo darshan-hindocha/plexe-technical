@@ -48,7 +48,7 @@ export default function XGBoostInfoModal({ isOpen, onClose }: XGBoostInfoModalPr
               <p className="text-gray-700 leading-relaxed">
                 XGBoost (eXtreme Gradient Boosting) is a powerful machine learning algorithm that excels at making predictions from data. 
                 Think of it as an extremely smart system that learns from examples and gets better at making predictions by combining 
-                the insights from many smaller "decision trees."
+                the insights from many smaller &ldquo;decision trees.&rdquo;
               </p>
             </div>
 
