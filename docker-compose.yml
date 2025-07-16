@@ -1,0 +1,63 @@
+services:
+  api:
+    build: ./backend
+    container_name: plexe-api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/opt/app
+      - model-storage:/opt/app/storage
+    environment:
+      - MODELS_STORAGE_PATH=/opt/app/storage/models
+      - DEBUG=true
+      # AI Provider Configuration
+      - DEFAULT_AI_PROVIDER=${DEFAULT_AI_PROVIDER:-openai/gpt-4o-mini}
+      - FALLBACK_AI_PROVIDER=${FALLBACK_AI_PROVIDER:-anthropic/claude-3-haiku-20240307}
+      # Provider API Keys
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - OLLAMA_BASE_URL=${OLLAMA_BASE_URL:-http://localhost:11434}
+      # AI Model Configuration
+      - AI_MAX_TOKENS=${AI_MAX_TOKENS:-4096}
+      - AI_TEMPERATURE=${AI_TEMPERATURE:-0.1}
+      - AI_TIMEOUT=${AI_TIMEOUT:-30}
+      # WebSocket Configuration
+      - WEBSOCKET_TIMEOUT=${WEBSOCKET_TIMEOUT:-30}
+      - WEBSOCKET_MAX_CONNECTIONS=${WEBSOCKET_MAX_CONNECTIONS:-100}
+      - WEBSOCKET_PING_INTERVAL=${WEBSOCKET_PING_INTERVAL:-30}
+      # Chat Configuration
+      - CHAT_CONTEXT_WINDOW=${CHAT_CONTEXT_WINDOW:-50}
+      - CHAT_MAX_HISTORY=${CHAT_MAX_HISTORY:-1000}
+      - CHAT_RATE_LIMIT=${CHAT_RATE_LIMIT:-60}
+    env_file:
+      - ./backend/.env
+    networks:
+      - plexe-network
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: plexe-frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/opt/app
+      - /opt/app/node_modules
+      - /opt/app/.next
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - api
+    networks:
+      - plexe-network
+    restart: unless-stopped
+
+volumes:
+  model-storage:
+    driver: local
+
+networks:
+  plexe-network:
+    driver: bridge 
