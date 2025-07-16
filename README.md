@@ -12,6 +12,8 @@ then run
 
 from project root dir
 
+example XGBoost models available at `backend/sample_models/`, generated from a script (instructions below)
+
 ## Product Showcase
 #### Chat example
 
