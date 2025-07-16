@@ -15,30 +15,30 @@ logger = logging.getLogger(__name__)
 def get_system_status() -> dict:
     """
     Get current system health and status information.
-    
+
     Returns:
         System status information including model count, memory usage, etc.
     """
     try:
         from ..services.registry import model_registry
-        
+
         models = model_registry.get_all_models()
         active_models = [m for m in models if m.status.value == "active"]
-        
+
         return {
             "status": "healthy",
             "total_models": len(models),
             "active_models": len(active_models),
             "timestamp": datetime.now().isoformat(),
             "service": "ML Model Chat Service",
-            "version": "1.0.0"
+            "version": "1.0.0",
         }
     except Exception as e:
         logger.error(f"Failed to get system status: {str(e)}")
         return {
             "status": "error",
             "message": f"Failed to get status: {str(e)}",
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
 
@@ -46,7 +46,7 @@ def get_system_status() -> dict:
 def get_available_commands() -> dict:
     """
     Get a list of available commands and their descriptions.
-    
+
     Returns:
         Dictionary of available commands with descriptions and usage examples
     """
@@ -59,7 +59,7 @@ def get_available_commands() -> dict:
         "make_batch_prediction": "Make predictions for multiple inputs. Usage: 'batch predict with [model_id] using [feature_list]'",
         "get_system_status": "Get current system health information. Usage: 'system status' or 'health check'",
         "get_upload_guidance": "Get information about how to upload model files. Usage: 'how do I upload a model?'",
-        "validate_file_for_upload": "Validate a file before upload. Usage: 'validate file [filename] with size [bytes]'"
+        "validate_file_for_upload": "Validate a file before upload. Usage: 'validate file [filename] with size [bytes]'",
     }
 
 
@@ -67,7 +67,7 @@ def get_available_commands() -> dict:
 def get_usage_examples() -> dict:
     """
     Get examples of how to use the chat system effectively.
-    
+
     Returns:
         Dictionary with usage examples for common tasks
     """
@@ -79,5 +79,5 @@ def get_usage_examples() -> dict:
         "system_check": "What's the system status?",
         "help": "What commands are available?",
         "upload": "How do I upload a new model?",
-        "delete": "Delete the old_model"
-    } 
+        "delete": "Delete the old_model",
+    }

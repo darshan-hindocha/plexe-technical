@@ -20,32 +20,28 @@ logger = logging.getLogger(__name__)
 class ChatAgent:
     """
     Provider-agnostic conversational agent for ML model management.
-    
+
     This follows the same pattern as plexe's ConversationalAgent, using
     decorated tool functions directly with the ToolCallingAgent.
     """
-    
-    def __init__(
-        self, 
-        model_id: Optional[str] = None, 
-        verbose: bool = False
-    ):
+
+    def __init__(self, model_id: Optional[str] = None, verbose: bool = False):
         self.model_id = model_id or settings.default_ai_provider
         self.verbose = verbose
-        
+
         # Set verbosity level
         self.verbosity = 1 if verbose else 0
-        
+
         # Configure API key based on provider
         api_key = None
         if self.model_id.startswith("openai/"):
             api_key = settings.openai_api_key
         elif self.model_id.startswith("anthropic/"):
             api_key = settings.anthropic_api_key
-        
+
         if not api_key:
             raise ValueError(f"API key not configured for provider {self.model_id}")
-        
+
         # Create the agent with all decorated tools and YAML prompt templates
         self.agent = ToolCallingAgent(
             name="MLModelAssistant",
@@ -67,15 +63,17 @@ class ChatAgent:
                 tools=ALL_TOOLS,
             ),
         )
-    
-    async def chat(self, message: str, context: Optional[List[Dict[str, Any]]] = None) -> str:
+
+    async def chat(
+        self, message: str, context: Optional[List[Dict[str, Any]]] = None
+    ) -> str:
         """
         Process a chat message and return the response.
-        
+
         Args:
             message: User message to process
             context: Optional conversation context (currently not used by smolagents)
-            
+
         Returns:
             Assistant response string
         """
@@ -93,10 +91,10 @@ def get_chat_agent(verbose: bool = False) -> ChatAgent:
     """
     Create a chat agent with the configured provider.
     Includes fallback logic if primary provider fails.
-    
+
     Args:
         verbose: Whether to enable verbose logging
-        
+
     Returns:
         Configured ChatAgent instance
     """
@@ -109,10 +107,14 @@ def get_chat_agent(verbose: bool = False) -> ChatAgent:
                 f"Falling back to {settings.fallback_ai_provider}"
             )
             try:
-                return ChatAgent(model_id=settings.fallback_ai_provider, verbose=verbose)
+                return ChatAgent(
+                    model_id=settings.fallback_ai_provider, verbose=verbose
+                )
             except Exception as fallback_error:
                 logger.error(f"Fallback provider also failed: {fallback_error}")
-                raise Exception(f"Both primary and fallback providers failed. Primary: {e}, Fallback: {fallback_error}")
+                raise Exception(
+                    f"Both primary and fallback providers failed. Primary: {e}, Fallback: {fallback_error}"
+                )
         else:
             logger.error(f"Primary provider failed and no fallback configured: {e}")
-            raise 
+            raise
