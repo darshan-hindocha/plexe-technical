@@ -2,6 +2,16 @@
 
 A conversational AI interface for ML model management that lets users upload XGBoost models and request predictions through a chat interface.
 
+## tldr
+
+copy over `backend/env.example` to `backend/.env`, then add anthropic api and open ai api in that .env file
+
+then run
+
+`make dev`
+
+from project root dir
+
 ## Product Showcase
 #### Chat example
 
