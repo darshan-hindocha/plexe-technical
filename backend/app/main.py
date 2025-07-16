@@ -1,3 +1,18 @@
+"""
+FastAPI application for ML model management and prediction service.
+
+This is the main entry point for the Plexe ML Model Service, providing:
+- Model upload and deployment via REST API
+- Real-time chat interface via WebSocket  
+- Prediction endpoints for deployed models
+
+Production TODOs:
+- Add authentication middleware
+- Implement rate limiting
+- Add proper logging configuration
+- Set up health check endpoints
+- Configure SSL/TLS for production
+"""
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 import logging

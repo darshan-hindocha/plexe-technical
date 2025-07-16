@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useCallback } from "react";
 import { Send, Bot, User, Loader2, Wifi, WifiOff, AlertCircle } from "lucide-react";
-import { useChatContext, Message } from "../lib/chat-context";
+import { useChatContext } from "../lib/chat-context";
 
 export default function Chat() {
   const {

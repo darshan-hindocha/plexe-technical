@@ -124,7 +124,7 @@ export function ChatProvider({ children, onModelUploadRequested }: ChatProviderP
         console.log('Received pong');
         break;
     }
-  }, []);
+  }, [getClientId]);
 
   // Update the ref when onModelUploadRequested changes
   useEffect(() => {
@@ -169,7 +169,7 @@ export function ChatProvider({ children, onModelUploadRequested }: ChatProviderP
       unsubscribeMessage();
       unsubscribeConnection();
     };
-  }, [getClientId]);
+  }, [getClientId, handleWebSocketMessage]);
 
   const sendMessage = useCallback(async () => {
     if (!inputMessage.trim() || !wsClient.current || !wsClient.current.isConnected()) {
@@ -225,7 +225,7 @@ export function ChatProvider({ children, onModelUploadRequested }: ChatProviderP
       };
       setMessages(prev => [...prev, errorMessage]);
     }
-  }, [inputMessage]);
+  }, [inputMessage, getClientId]);
 
   const isConnected = useCallback(() => {
     return wsClient.current?.isConnected() ?? false;

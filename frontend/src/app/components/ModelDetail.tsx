@@ -1,19 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { 
   ArrowLeft, 
-  Brain, 
-  Activity, 
-  FileText, 
   Calendar, 
   Package, 
-  Settings, 
   BarChart3, 
   Upload,
-  Trash2,
-  RotateCcw,
-  Eye,
   MoreHorizontal 
 } from 'lucide-react';
 import { ModelMeta } from '../lib/client';
@@ -27,26 +20,9 @@ interface ModelDetailProps {
   onDeleteModel: (modelId: string) => void;
 }
 
-const getModelIcon = (modelType: string) => {
-  switch (modelType) {
-    case 'classifier':
-      return Brain;
-    case 'regressor':
-      return Activity;
-    default:
-      return FileText;
-  }
-};
 
-const getStatusBadge = (isLatest: boolean, deployedAt?: string) => {
-  if (isLatest) {
-    return <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">Latest</span>;
-  }
-  if (deployedAt) {
-    return <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">Deployed</span>;
-  }
-  return <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded-full text-xs font-medium">Archived</span>;
-};
+
+
 
 const formatDate = (dateString: string) => {
   return format(dateString);
@@ -59,12 +35,9 @@ export default function ModelDetail({
   onDeployNewVersion,
   onDeleteModel 
 }: ModelDetailProps) {
-  const [selectedVersion, setSelectedVersion] = useState<string | null>(null);
-  
   // Sort models by version (latest first)
   const sortedModels = [...models].sort((a, b) => (b.version || 0) - (a.version || 0));
   const latestModel = sortedModels[0];
-  const Icon = getModelIcon(latestModel?.model_type || '');
 
   const handleActionClick = (action: string, modelId: string) => {
     switch (action) {

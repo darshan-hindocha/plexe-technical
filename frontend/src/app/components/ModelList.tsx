@@ -8,13 +8,11 @@ import ModelCard from './ModelCard';
 import ModelDetail from './ModelDetail';
 import DocsModal from './DocsModal';
 import XGBoostInfoModal from './XGBoostInfoModal';
-import { format } from 'timeago.js';
+
 
 interface ModelListProps {
   models: ModelMeta[];
   onDeleteModel: (modelId: string) => void;
-  onSelectModel: (model: ModelMeta) => void;
-  selectedModelId?: string;
   onUploadClick: () => void;
   onChatPrediction: (modelFamily: ModelFamily) => void;
 }
@@ -30,18 +28,11 @@ interface ModelFamily {
   models: ModelMeta[];
 }
 
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric'
-  });
-};
+
 
 export default function ModelList({ 
   models, 
   onDeleteModel, 
-  onSelectModel, 
-  selectedModelId,
   onUploadClick,
   onChatPrediction 
 }: ModelListProps) {
@@ -104,10 +95,7 @@ export default function ModelList({
     }
   };
 
-  const handleSelectModel = (model: ModelMeta) => {
-    analytics.modelSelected(model.id, model.name);
-    onSelectModel(model);
-  };
+
 
   const handleFamilyClick = (familyName: string) => {
     setSelectedFamily(familyName);
